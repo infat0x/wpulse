@@ -15,19 +15,6 @@ Browser-based WPScan output analyzer. Paste your scan results and get instant vu
 - Drag & drop file support
 - Scan history (localStorage)
 
-## Usage
-
-1. Open the page
-2. Paste WPScan output or click "Load Example"
-3. Browse the vulnerability dashboard
-
-## Deploy to GitHub Pages
-
-1. Push this repo to GitHub
-2. Go to Settings → Pages
-3. Set Source to `main` branch, `/ (root)` directory
-4. Site will be live at `https://<username>.github.io/wpulse/`
-
 ## Files
 
 ```
