@@ -1,6 +1,13 @@
 <div align="center">
   <img src="logo.png" alt="WPulse Logo" style="background: transparent;" width="200">
+  
   <h1>WPulse</h1>
+  
+  <p>
+    <img src="https://img.shields.io/badge/Language-JavaScript-yellow?style=flat&logo=javascript" alt="JS">
+    <img src="https://img.shields.io/badge/Tool-WPScan-blue?style=flat&logo=shield" alt="WPScan">
+    <img src="https://img.shields.io/badge/Category-Security-red?style=flat&logo=security" alt="Security">
+  </p>
 </div>
 Browser-based WPScan output analyzer. Paste your scan results and get instant vulnerability dashboard with severity classification, CVE extraction, and advanced filtering.
 
