@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (dev tools only)
+node_modules/
+
+# Old backend (removed)
+__pycache__/
+*.pyc
