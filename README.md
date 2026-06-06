@@ -1,9 +1,7 @@
-<p align="center">
-  <img src="logo.png" alt="WPulse Logo" style="background: transparent;" width=200>
-</p>
-<p align="center">
-# WPulse
-</p>
+<div align="center">
+  <img src="logo.png" alt="WPulse Logo" style="background: transparent;" width="200">
+  <h1>WPulse</h1>
+</div>
 Browser-based WPScan output analyzer. Paste your scan results and get instant vulnerability dashboard with severity classification, CVE extraction, and advanced filtering.
 
 **Live Demo:** https://infat0x.github.io/wpulse/
