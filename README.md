@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.png" alt="WPulse Logo" style="background: transparent;" width="200">
+  <img src="logo.png" alt="WPulse Logo" style="background: transparent;" width="175">
   
   <h1>WPulse</h1>
   
