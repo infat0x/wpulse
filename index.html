@@ -57,6 +57,29 @@
   --sidebar-w: 280px;
 }
 
+[data-theme="dark"] {
+  --bg:           #0f0f0f;
+  --bg-white:     #171717;
+  --bg-warm:      #1a1a1a;
+  --bg-hover:     #222222;
+  --bg-input:     #1e1e1e;
+
+  --border:       #2e2e2e;
+  --border-strong:#454545;
+  --border-dark:  #ffffff;
+
+  --txt:          #e5e5e5;
+  --txt-2:        #a3a3a3;
+  --txt-3:        #737373;
+  --txt-inv:      #0f0f0f;
+
+  --critical-bg:  rgba(220, 38, 38, 0.15);
+  --high-bg:      rgba(234, 88, 12, 0.15);
+  --medium-bg:    rgba(202, 138, 4, 0.15);
+  --low-bg:       rgba(22, 163, 74, 0.15);
+  --accent-bg:    rgba(255, 107, 0, 0.15);
+}
+
 /* ═══════════════════════════════════════════════════════
    RESET & BASE
 ═══════════════════════════════════════════════════════ */
@@ -1113,6 +1136,11 @@ a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
+<script>
+  if (localStorage.getItem('wpulse-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+</script>
 
 <!-- Drop Overlay -->
 <div class="drop-overlay" id="dropOverlay">
@@ -1137,6 +1165,7 @@ a:hover { text-decoration: underline; }
   <div class="nav-sep"></div>
 
   <div class="nav-right">
+    <button class="nav-link" id="themeToggle" onclick="toggleTheme()" style="font-size: 16px; padding: 4px 8px; margin-right: 8px;" title="Toggle Dark Mode">🌙</button>
     <div class="nav-status">
       <div class="status-dot"></div>
       <span id="status-text">Ready</span>
@@ -1222,6 +1251,25 @@ a:hover { text-decoration: underline; }
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════════════════════════ */
+if (document.documentElement.getAttribute('data-theme') === 'dark') {
+  document.getElementById('themeToggle').textContent = '☀️';
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  if (current === 'dark') {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('wpulse-theme', 'light');
+    document.getElementById('themeToggle').textContent = '🌙';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('wpulse-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════
    WPScan Parser — Client-Side JavaScript
 ═══════════════════════════════════════════════════════════ */
