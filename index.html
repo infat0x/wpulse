@@ -967,6 +967,8 @@ a:hover { text-decoration: underline; }
   font-size: 11px;
   color: var(--txt-3);
 }
+.plugin-ver.ver-uptodate { color: var(--low); font-weight: 600; }
+.plugin-ver.ver-outdated { color: var(--critical); font-weight: 600; }
 .plugin-meta {
   display: flex;
   align-items: center;
@@ -1305,8 +1307,14 @@ function parseWpscan(raw) {
     if (/\[\+\] URL:/.test(line)) { const m = line.match(/https?:\/\/[^\s\]]+/); if (m) result.target = m[0].replace(/\/$/, ''); }
     if (line.includes('WordPress version')) { const m = line.match(/(\d+\.\d+[\.\d]*)/); if (m) result.wordpress_version = m[1]; }
     const pm = line.match(/^\[\+\]\s+([\w\-]+)\s*$/);
-    if (pm) { currentPlugin = { name: pm[1], version:'', vulns:[] }; result.plugins.push(currentPlugin); result.summary.plugins_found++; }
-    if (currentPlugin) { let vm = line.match(/\|\s+Version:\s+([\d.]+)/); if (vm && !currentPlugin.version) currentPlugin.version = vm[1]; vm = line.match(/\?ver=([\d.]+)/); if (vm && !currentPlugin.version) currentPlugin.version = vm[1]; }
+    if (pm) { currentPlugin = { name: pm[1], version:'', latestVersion:'', versionStatus:'unknown', vulns:[] }; result.plugins.push(currentPlugin); result.summary.plugins_found++; }
+    if (currentPlugin) {
+      let vm = line.match(/\|\s+Version:\s+([\d.]+)/); if (vm && !currentPlugin.version) currentPlugin.version = vm[1];
+      vm = line.match(/\?ver=([\d.]+)/); if (vm && !currentPlugin.version) currentPlugin.version = vm[1];
+      const lvm = line.match(/\|\s+Latest Version:\s+([\d.]+)\s*(\(up to date\))?/i);
+      if (lvm) { currentPlugin.latestVersion = lvm[1]; if (lvm[2]) currentPlugin.versionStatus = 'uptodate'; }
+      if (/\[!\]\s+The version is out of date/i.test(line)) currentPlugin.versionStatus = 'outdated';
+    }
     if (/\[!\] Title:/.test(line)) {
       const tm = line.match(/\[!\] Title:\s*(.+)/);
       if (tm) {
@@ -1656,7 +1664,7 @@ function render(d) {
             <div class="plugin-icon">🧩</div>
             <div>
               <div class="plugin-name">${esc(p.name)}</div>
-              ${p.version ? `<div class="plugin-ver">v${esc(p.version)}</div>` : ''}
+              ${(()=>{ const verParts = []; const cls = p.versionStatus==='uptodate'?'ver-uptodate':p.versionStatus==='outdated'?'ver-outdated':''; if(p.version) verParts.push('v'+esc(p.version)); if(p.latestVersion && p.versionStatus==='outdated') verParts.push('→ '+esc(p.latestVersion)); if(p.versionStatus==='uptodate') verParts.push('✓ up to date'); else if(p.versionStatus==='outdated') verParts.push('⚠ outdated'); return verParts.length?`<div class="plugin-ver ${cls}">${verParts.join(' ')}</div>`:p.latestVersion?`<div class="plugin-ver">latest: ${esc(p.latestVersion)}</div>`:''; })()}
             </div>
           </div>
           <div class="plugin-meta">
