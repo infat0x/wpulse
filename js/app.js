@@ -1,21 +1,21 @@
-﻿window.WPulseTools = [];
+window.WPulseTools = [];
 window.registerTool = function(tool) {
   window.WPulseTools.push(tool);
 };
 
 if (document.documentElement.getAttribute('data-theme') === 'dark') {
-  document.getElementById('themeToggle').textContent = 'â˜€ï¸';
+  document.getElementById('themeToggle').textContent = '☀️';
 }
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
   if (current === 'dark') {
     document.documentElement.removeAttribute('data-theme');
     localStorage.setItem('wpulse-theme', 'light');
-    document.getElementById('themeToggle').textContent = 'ðŸŒ™';
+    document.getElementById('themeToggle').textContent = '🌙';
   } else {
     document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.setItem('wpulse-theme', 'dark');
-    document.getElementById('themeToggle').textContent = 'â˜€ï¸';
+    document.getElementById('themeToggle').textContent = '☀️';
   }
 }
 
@@ -65,7 +65,7 @@ function renderHistoryList() {
   const list = document.getElementById('histList');
   if (!history_items.length) { list.innerHTML = '<div class="hist-empty">No scans yet.<br>Analyze output to see history.</div>'; return; }
   list.innerHTML = history_items.map((e,i) => {
-    return \`<div class="hist-item" onclick="loadHistoryItem(\${i})"><div class="hist-item-url">\${esc(e.target)}</div><div class="hist-item-meta">\${e.badges||''}<span class="hist-time">\${e.date} \${e.time}</span></div></div>\`;
+    return `<div class="hist-item" onclick="loadHistoryItem(${i})"><div class="hist-item-url">${esc(e.target)}</div><div class="hist-item-meta">${e.badges||''}<span class="hist-time">${e.date} ${e.time}</span></div></div>`;
   }).join('');
 }
 
@@ -73,7 +73,7 @@ function loadHistoryItem(idx) {
   const entry = history_items[idx];
   if (!entry) return;
   const raw = sessionStorage.getItem('wpulse-'+entry.rawKey);
-  if (!raw) { setStatus('Session expired â€” re-analyze'); return; }
+  if (!raw) { setStatus('Session expired — re-analyze'); return; }
   window.LAST_DATA = JSON.parse(raw);
   window.ACTIVE_TOOL = window.WPulseTools.find(t => t.id === entry.toolId);
   if (window.ACTIVE_TOOL && window.ACTIVE_TOOL.onLoadHistory) {
@@ -96,7 +96,7 @@ function go() {
   if (!raw) return;
   const btn = document.getElementById('analyzeBtn');
   btn.classList.add('loading');
-  setStatus('Analyzingâ€¦');
+  setStatus('Analyzing…');
   setTimeout(() => {
     try {
       let matchedTool = window.WPulseTools.find(t => t.match(raw));
@@ -123,15 +123,15 @@ function go() {
       
     } catch(err) {
       btn.classList.remove('loading');
-      setStatus('Error â€” ' + err.message);
+      setStatus('Error — ' + err.message);
       console.error(err);
     }
   }, 60);
 }
 
 function loadExample() {
-  setStatus('Loading exampleâ€¦');
-  fetch('example-input.txt')
+  setStatus('Loading example…');
+  fetch('./example-input.txt')
     .then(r => { if (!r.ok) throw new Error('Not found'); return r.text(); })
     .then(txt => { document.getElementById('raw').value = txt; showView('input'); go(); })
     .catch(() => setStatus('Could not load example file'));
