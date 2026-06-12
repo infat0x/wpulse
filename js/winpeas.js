@@ -13,7 +13,7 @@ window.registerTool({
   placeholder: 'Paste your WinPEAS output here...\n\nExample:\n=========|| SYSTEM INFORMATION ||=========\n...',
   exampleText: '=========|| SYSTEM INFORMATION ||=========\nHostname: WIN-SERVER\nOS: Windows Server 2019\n\n=========|| PRIVILEGES ||=========\nSeDebugPrivilege  Enabled\n\n=========|| USERS AND GROUPS ||=========\nAdministrator\nGuest\n\n=========|| UNQUOTED SERVICE PATHS ||=========\nUnquoted Service Path found!\nName: VulnerableService\nPathName: C:\\Program Files\\Vuln App\\service.exe',
   match: function(raw) {
-    return raw.includes('=========||') || raw.includes('WinPEAS') || raw.includes('ADVISORY: WinPEAS');
+    return /=========\|\||winpeas/i.test(raw);
   },
   parse: function(raw) {
     const lines = raw.split('\n');
@@ -28,23 +28,28 @@ window.registerTool({
       if (!line) continue;
       
       // Detect section headers
-      if (line.includes('=========||')) {
-        let title = line.replace(/=+|\|+/g, '').trim();
-        if (title) {
-          if (currentSection.lines.length > 0) {
-            sections.push(currentSection);
-          }
-          currentSection = { title: title, lines: [], type: 'info' };
+      let title = "";
+      let headerMatch = line.match(/^(?:[?═▄█■]{6,}|={4,}\|\|)\s*(.*?)(?:\s*[?═▄█■]{6,}|\s*\|\|={4,})?\s*$/);
+      if (headerMatch) {
+          title = headerMatch[1].replace(/[?═▄█■=|\s]+$/, '').trim();
+      } else if (line.includes('=========||')) {
+          title = line.replace(/=+|\|+/g, '').trim();
+      }
+      
+      if (title) {
+        if (currentSection.lines.length > 0) {
+          sections.push(currentSection);
         }
+        currentSection = { title: title, lines: [], type: 'info' };
       } else {
         currentSection.lines.push(line);
         
         // Very basic heuristic for highlighting
         let lower = line.toLowerCase();
-        if (lower.includes('password') || lower.includes('credential') || lower.includes('unquoted service path') || lower.includes('vulnerable') || lower.includes('found:')) {
+        if (lower.includes('password') || lower.includes('credential') || lower.includes('unquoted service path') || lower.includes('vulnerable') || lower.includes('found:') || lower.includes('[critical]') || lower.includes('[!]')) {
            currentSection.type = 'critical';
            criticalCount++;
-        } else if (lower.includes('permission') || lower.includes('denied') || lower.includes('enabled')) {
+        } else if (lower.includes('permission') || lower.includes('denied') || lower.includes('enabled') || lower.includes('[important]')) {
            if (currentSection.type !== 'critical') currentSection.type = 'warning';
            highCount++;
         }
