@@ -172,4 +172,8 @@ function togP(pid) {
   b.classList.toggle('open');
 }
 
-window.addEventListener('DOMContentLoaded', () => renderHistoryList());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => renderHistoryList());
+} else {
+  renderHistoryList();
+}

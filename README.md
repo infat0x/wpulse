@@ -27,7 +27,11 @@ Browser-based WPScan output analyzer. Paste your scan results and get instant vu
 ## Files
 
 ```
-index.html          — Full application (HTML + CSS + JS)
+index.html          — Main HTML structure
+css/main.css        — Design system and styling
+js/app.js           — Core logic and tool registry
+js/wpscan.js        — WPScan parser and UI
+js/nmap.js          — Nmap parser and UI
 example-input.txt   — Sample WPScan output for demo
 ```
 
