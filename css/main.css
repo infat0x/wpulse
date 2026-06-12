@@ -454,7 +454,7 @@ a:hover { text-decoration: underline; }
   background: var(--bg-white);
   border: 1px solid var(--border-strong);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border-radius: 50px;
+  border-radius: 12px;
   padding: 12px 24px;
   color: var(--txt);
   font-weight: 600;
