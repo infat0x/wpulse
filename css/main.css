@@ -442,6 +442,58 @@ a:hover { text-decoration: underline; }
 /* ═══════════════════════════════════════════════════════
    HERO / PLACEHOLDER
 ═══════════════════════════════════════════════════════ */
+.floating-back-btn {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  z-index: 9999;
+  display: flex; /* overridden by JS to 'none' or 'flex' */
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--bg-white);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 50px;
+  padding: 12px 24px;
+  color: var(--txt);
+  font-weight: 600;
+  font-family: var(--display);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html[data-theme="dark"] .floating-back-btn {
+  background: rgba(26, 26, 26, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.floating-back-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+html[data-theme="dark"] .floating-back-btn:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+}
+
+.floating-back-btn .icon {
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.floating-back-btn:hover .icon {
+  transform: translateX(-4px);
+}
+
 .hero {
   display: flex;
   flex-direction: column;
