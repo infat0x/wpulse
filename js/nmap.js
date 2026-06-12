@@ -59,7 +59,7 @@ function renderNmapTable(hosts) {
 
     html += `
     <div class="section" style="margin-bottom: 20px; border-radius: 6px; overflow: hidden; border: 1px solid var(--accent);">
-      <div class="sec-header" onclick="const b = this.nextElementSibling; b.style.display = b.style.display === 'none' ? 'block' : 'none';" style="cursor: pointer; background-color: var(--accent); color: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; user-select: none;">
+      <div class="sec-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';" style="cursor: pointer; background-color: var(--accent); color: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; user-select: none;">
         <div class="sec-title" style="margin: 0; font-weight: 600; display: flex; align-items: center; gap: 8px;">Host: ${esc(host.ip)} ${badgesHtml}</div>
         <div style="font-size: 12px; opacity: 0.9;">▼ Click to toggle</div>
       </div>
