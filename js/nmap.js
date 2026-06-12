@@ -52,16 +52,16 @@ function renderNmapTable(hosts) {
   let html = '<div class="export-bar" style="margin-bottom:20px;text-align:right;"><button class="btn btn-secondary" onclick="exportNmapMD()">Export Markdown</button></div>';
   
   for (const host of hosts) {
-    let badgesHtml = `<span class="sec-count" style="background: rgba(255,255,255,0.2); color: #fff; border-color: rgba(255,255,255,0.4);">${host.ports.length} ports</span>`;
+    let badgesHtml = `<span class="sec-count">${host.ports.length} ports</span>`;
     if (host.os) {
-      badgesHtml += `<span class="sec-count" style="background: rgba(255,255,255,0.2); color: #fff; border-color: rgba(255,255,255,0.4);">${esc(host.os)}</span>`;
+      badgesHtml += `<span class="sec-count" style="background:var(--accent-bg);color:var(--accent);border-color:var(--accent-bd);">${esc(host.os)}</span>`;
     }
 
     html += `
-    <div class="section" style="margin-bottom: 20px; border-radius: 6px; overflow: hidden; border: 1px solid var(--accent);">
-      <div class="sec-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';" style="cursor: pointer; background-color: var(--accent); color: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; user-select: none;">
-        <div class="sec-title" style="margin: 0; font-weight: 600; display: flex; align-items: center; gap: 8px;">Host: ${esc(host.ip)} ${badgesHtml}</div>
-        <div style="font-size: 12px; opacity: 0.9;">▼ Click to toggle</div>
+    <div class="section" style="margin-bottom: 20px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border);">
+      <div class="sec-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';" style="cursor: pointer; background-color: var(--bg-white); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; user-select: none;">
+        <div class="sec-title" style="margin: 0; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--accent);">Host: ${esc(host.ip)} ${badgesHtml}</div>
+        <div style="font-size: 12px; color: var(--txt-3);">▼ Click to toggle</div>
       </div>
       <div class="sec-body" style="padding: 0; display: none; background: var(--bg-white);">`;
       
