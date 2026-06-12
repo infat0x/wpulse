@@ -135,7 +135,15 @@ function exportNmapMD() {
 window.registerTool({
   id: 'nmap',
   name: 'Nmap',
-  icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`,
+  icon: `<svg viewBox="0 0 100 100" width="56" height="56">
+  <path d="M 5,50 C 35,20 65,20 95,50 C 65,80 35,80 5,50 Z" fill="none" stroke="#6bb3d9" stroke-width="3" />
+  <path d="M 12,50 C 35,30 65,30 88,50 C 65,70 35,70 12,50 Z" fill="none" stroke="#6bb3d9" stroke-width="1.5" />
+  <path d="M 22,50 C 35,40 65,40 78,50 C 65,60 35,60 22,50 Z" fill="none" stroke="#6bb3d9" stroke-width="1" />
+  <circle cx="50" cy="50" r="18" fill="#3b5668" />
+  <circle cx="50" cy="50" r="12" fill="none" stroke="#89a8bc" stroke-width="1" />
+  <circle cx="50" cy="50" r="4" fill="#ffffff" />
+  <path d="M 32,50 L 68,50 M 50,32 L 50,68" stroke="#ffffff" stroke-width="1.5" />
+</svg>`,
   description: 'Parse Nmap scan reports and view open ports, services, and versions.',
   placeholder: 'Paste your Nmap scan output here...\n\nExample:\nNmap scan report for 192.168.1.1\nPORT     STATE SERVICE\n80/tcp   open  http',
   exampleText: 'Starting Nmap 7.92 ( https://nmap.org ) at 2023-10-27 10:00\nNmap scan report for scanme.nmap.org (45.33.32.156)\nHost is up (0.040s latency).\nNot shown: 996 closed tcp ports\nPORT      STATE SERVICE    VERSION\n22/tcp    open  ssh        OpenSSH 6.6.1p1\n80/tcp    open  http       Apache httpd 2.4.7\n9929/tcp  open  nping-echo Nping echo\n31337/tcp open  tcpwrapped\n\nNmap done: 1 IP address (1 host up) scanned in 12.08 seconds',

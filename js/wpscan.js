@@ -193,7 +193,10 @@ window.exportCSV = function() {
 window.registerTool({
   id: 'wpscan',
   name: 'WPScan',
-  icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`,
+  icon: `<svg viewBox="0 0 100 100" width="56" height="56" style="overflow:visible">
+  <path d="M 50,35 L 85,55 L 50,75 L 15,55 Z" fill="#00c08b" transform="translate(0, 12)" />
+  <path d="M 50,20 L 85,40 L 50,60 L 15,40 Z" fill="#035473" style="stroke: var(--bg-white); stroke-width: 6px; stroke-linejoin: round;" />
+</svg>`,
   description: 'Analyze WPScan vulnerabilities, CVEs, and outdated plugins.',
   placeholder: 'Paste your WPScan output here...\n\nExample:\nwpscan --url http://target --enumerate vp --api-token TOKEN',
   exampleFile: './example-input.txt',
