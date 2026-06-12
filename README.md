@@ -1,4 +1,14 @@
-# WPulse
+<div align="center">
+  <img src="logo.png" alt="WPulse Logo" style="background: transparent;" width="175">
+  
+  <h1>WPulse</h1>
+  
+  <p>
+    <img src="https://img.shields.io/badge/Language-JavaScript-yellow?style=flat&logo=javascript" alt="JS">
+    <img src="https://img.shields.io/badge/Tool-WPScan-blue?style=flat&logo=shield" alt="WPScan">
+    <img src="https://img.shields.io/badge/Category-Security-red?style=flat&logo=security" alt="Security">
+  </p>
+</div>
 
 Browser-based Security Multi-Tool Analyzer. Select a tool from the dashboard, paste your scan results, and get an instant vulnerability and service dashboard with severity classification, CVE extraction, and advanced filtering. Runs entirely in the client browser.
 
