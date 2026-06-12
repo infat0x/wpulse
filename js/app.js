@@ -222,3 +222,125 @@ if (document.readyState === 'loading') {
 } else {
   renderHistoryList(); renderToolGrid();
 }
+
+let globalSearchMatches = [];
+let globalSearchCurrentIndex = -1;
+let globalSearchLastTerm = '';
+
+window.handleCustomGlobalSearch = function(e, val) {
+  if (e.key === 'Enter') {
+    executeGlobalSearch(val);
+  }
+};
+
+function executeGlobalSearch(term) {
+  const container = document.getElementById('mainContent');
+  if (!container) return;
+
+  term = term.trim().toLowerCase();
+  if (!term) {
+    removeHighlights(container);
+    globalSearchMatches = [];
+    globalSearchCurrentIndex = -1;
+    globalSearchLastTerm = '';
+    return;
+  }
+
+  if (term === globalSearchLastTerm && globalSearchMatches.length > 0) {
+    if (!document.body.contains(globalSearchMatches[0])) {
+      globalSearchLastTerm = '';
+      return executeGlobalSearch(term);
+    }
+    globalSearchCurrentIndex = (globalSearchCurrentIndex + 1) % globalSearchMatches.length;
+    scrollToMatch(globalSearchMatches[globalSearchCurrentIndex]);
+    return;
+  }
+
+  removeHighlights(container);
+  globalSearchMatches = [];
+  globalSearchCurrentIndex = -1;
+  globalSearchLastTerm = term;
+
+  const walker = document.createTreeWalker(container, 4 /* NodeFilter.SHOW_TEXT */, null, false);
+  const textNodes = [];
+  let node;
+  while (node = walker.nextNode()) {
+    if (node.parentNode.nodeName !== 'SCRIPT' && node.parentNode.nodeName !== 'STYLE' && node.parentNode.nodeName !== 'NOSCRIPT' && !node.parentNode.classList.contains('global-highlight')) {
+      textNodes.push(node);
+    }
+  }
+
+  textNodes.forEach(textNode => {
+    let currentTextNode = textNode;
+    let text = currentTextNode.nodeValue;
+    let lowerText = text.toLowerCase();
+    let idx = lowerText.indexOf(term);
+
+    while (idx !== -1) {
+      const matchText = text.substr(idx, term.length);
+      const mark = document.createElement('mark');
+      mark.className = 'global-highlight';
+      mark.style.backgroundColor = '#ffeb3b';
+      mark.style.color = '#000';
+      mark.style.padding = '0 2px';
+      mark.style.borderRadius = '2px';
+      mark.textContent = matchText;
+
+      const after = currentTextNode.splitText(idx);
+      after.nodeValue = after.nodeValue.substr(term.length);
+      currentTextNode.parentNode.insertBefore(mark, after);
+
+      globalSearchMatches.push(mark);
+
+      let parent = mark.parentElement;
+      while (parent && parent !== container) {
+        if (parent.style && parent.style.display === 'none') {
+          parent.style.display = 'block';
+        }
+        if (parent.classList && parent.classList.contains('plugin-body') && !parent.classList.contains('open')) {
+          parent.classList.add('open');
+        }
+        if (parent.classList && parent.classList.contains('sec-body') && !parent.classList.contains('open')) {
+          parent.classList.add('open');
+          if (parent.id && parent.id.endsWith('Body')) {
+            const cid = parent.id.replace('Body', 'Chev');
+            const chevron = document.getElementById(cid);
+            if (chevron) chevron.classList.add('open');
+          }
+        }
+        parent = parent.parentElement;
+      }
+
+      currentTextNode = after;
+      text = currentTextNode.nodeValue;
+      lowerText = text.toLowerCase();
+      idx = lowerText.indexOf(term);
+    }
+  });
+
+  if (globalSearchMatches.length > 0) {
+    globalSearchCurrentIndex = 0;
+    scrollToMatch(globalSearchMatches[0]);
+  }
+}
+
+function scrollToMatch(mark) {
+  document.querySelectorAll('.global-highlight').forEach(m => {
+    m.style.backgroundColor = '#ffeb3b';
+    m.style.color = '#000';
+    m.style.boxShadow = 'none';
+  });
+  mark.style.backgroundColor = 'var(--accent)';
+  mark.style.color = '#fff';
+  mark.style.boxShadow = '0 0 0 2px var(--accent-bd)';
+  mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function removeHighlights(container) {
+  const marks = container.querySelectorAll('mark.global-highlight');
+  marks.forEach(mark => {
+    const parent = mark.parentNode;
+    parent.replaceChild(document.createTextNode(mark.textContent), mark);
+    parent.normalize();
+  });
+}

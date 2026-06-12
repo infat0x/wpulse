@@ -40,7 +40,7 @@
   <div class="nav-right">
     <div class="global-search" style="display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; padding: 0 10px; margin-right: 12px; height: 32px; transition: border-color 0.2s;">
       <span style="font-size: 14px; margin-right: 6px; color: var(--txt-3);">🔍</span>
-      <input type="text" id="globalSearchInput" placeholder="Search page..." onkeydown="if(event.key==='Enter') window.find(this.value)" style="border: none; background: transparent; font-family: var(--body); font-size: 13px; color: var(--txt); outline: none; width: 160px;">
+      <input type="text" id="globalSearchInput" placeholder="Search page..." onkeydown="handleCustomGlobalSearch(event, this.value)" style="border: none; background: transparent; font-family: var(--body); font-size: 13px; color: var(--txt); outline: none; width: 160px;">
     </div>
     <button class="nav-link" id="themeToggle" onclick="toggleTheme()" style="font-size: 16px; padding: 4px 8px; margin-right: 8px;" title="Toggle Dark Mode">🌙</button>
     <div class="nav-status">
