@@ -33,8 +33,9 @@ function showView(view) {
   if (backBtn) backBtn.style.display = view === 'hero' ? 'none' : 'flex';
 
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  if (view === 'dashboard' || view === 'hero') document.getElementById('navDashboard').classList.add('active');
-  if (view === 'input') document.getElementById('navInput').classList.add('active');
+  if (view === 'hero') { const el = document.getElementById('navHome'); if(el) el.classList.add('active'); }
+  if (view === 'dashboard') { const el = document.getElementById('navDashboard'); if(el) el.classList.add('active'); }
+  if (view === 'input') { const el = document.getElementById('navInput'); if(el) el.classList.add('active'); }
 }
 
 window.goBackBtnClicked = function() {
