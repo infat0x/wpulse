@@ -1167,8 +1167,13 @@ html[data-theme="dark"] .floating-back-btn:hover {
 }
 
 .tool-card {
-  background: var(--bg-white);
-  border: 1px solid var(--border);
+  background-color: var(--accent-bg);
+  background-image: 
+    linear-gradient(var(--accent-bd) 1px, transparent 1px),
+    linear-gradient(90deg, var(--accent-bd) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center top;
+  border: 1px solid var(--accent-bd);
   border-radius: 12px;
   padding: 32px 24px;
   display: flex;
@@ -1176,7 +1181,7 @@ html[data-theme="dark"] .floating-back-btn:hover {
   align-items: center;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition: all 0.3s var(--ease);
   position: relative;
   overflow: hidden;
 }
