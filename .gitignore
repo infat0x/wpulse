@@ -15,3 +15,6 @@ node_modules/
 # Old backend (removed)
 __pycache__/
 *.pyc
+
+# Local Memory
+memory.md
