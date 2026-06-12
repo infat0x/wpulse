@@ -49,7 +49,16 @@ function parseNmap(raw) {
 function renderNmapTable(hosts) {
   if (!hosts || !hosts.length) return '<div class="empty-msg">No hosts found in the scan.</div>';
   
-  let html = '<div class="export-bar" style="margin-bottom:20px;text-align:right;"><button class="btn btn-secondary" onclick="exportNmapMD()">Export Markdown</button></div>';
+  let html = `<div class="export-bar" style="margin-bottom:20px;">
+    <div class="export-left">Last analyzed: ${new Date().toLocaleString()}</div>
+    <div class="export-right">
+      <button class="export-btn" onclick="toggleAllNmap(true)">Expand All</button>
+      <button class="export-btn" onclick="toggleAllNmap(false)">Collapse All</button>
+      <button class="export-btn" onclick="copyNmapIPs()">Copy IPs</button>
+      <button class="export-btn" onclick="exportNmapMD()">Export MD</button>
+      <button class="export-btn" onclick="exportNmapJSON()">Export JSON</button>
+    </div>
+  </div>`;
   
   for (const host of hosts) {
     let badgesHtml = `<span class="sec-count">${host.ports.length} ports</span>`;
@@ -129,6 +138,35 @@ function exportNmapMD() {
   const blob = new Blob([md], {type:'text/markdown'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = 'nmap-report.md'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+window.toggleAllNmap = function(open) {
+  const bodies = document.querySelectorAll('#viewDashboard .sec-body');
+  bodies.forEach(b => {
+    b.style.display = open ? 'block' : 'none';
+  });
+};
+
+window.copyNmapIPs = function() {
+  const hosts = window.LAST_NMAP_DATA;
+  if (!hosts) return;
+  const ips = hosts.map(h => h.ip).join('\n');
+  navigator.clipboard.writeText(ips).then(() => {
+    const statusEl = document.getElementById('status-text');
+    if (statusEl) {
+      statusEl.textContent = 'IPs copied to clipboard!';
+      setTimeout(() => statusEl.textContent = 'Ready', 3000);
+    }
+  });
+};
+
+window.exportNmapJSON = function() {
+  const hosts = window.LAST_NMAP_DATA;
+  if (!hosts) return;
+  const blob = new Blob([JSON.stringify(hosts, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'nmap-report.json'; a.click();
   URL.revokeObjectURL(url);
 }
 

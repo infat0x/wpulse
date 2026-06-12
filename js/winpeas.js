@@ -76,6 +76,16 @@ window.registerTool({
       </div>
     </div>`;
     
+    html += `<div class="export-bar" style="margin-bottom:20px;">
+      <div class="export-left">Last analyzed: ${new Date().toLocaleString()}</div>
+      <div class="export-right">
+        <button class="export-btn" onclick="toggleAllWinpeas(true)">Expand All</button>
+        <button class="export-btn" onclick="toggleAllWinpeas(false)">Collapse All</button>
+        <button class="export-btn" onclick="exportWinpeasMD()">Export MD</button>
+        <button class="export-btn" onclick="exportWinpeasJSON()">Export JSON</button>
+      </div>
+    </div>`;
+    
     html += `<div style="display:flex; flex-direction:column; gap:16px;">`;
     
     data.sections.forEach(sec => {
@@ -112,5 +122,35 @@ window.registerTool({
     };
   }
 });
+
+window.toggleAllWinpeas = function(open) {
+  const bodies = document.querySelectorAll('#viewDashboard .tool-card > div:nth-child(2)');
+  bodies.forEach(b => {
+    b.style.display = open ? 'block' : 'none';
+  });
+};
+
+window.exportWinpeasMD = function() {
+  const data = window.LAST_WINPEAS_DATA;
+  if (!data) return;
+  let md = '# WinPEAS Report\n\n';
+  data.sections.forEach(sec => {
+    md += `## ${sec.title}\n`;
+    md += '```text\n' + sec.lines.join('\n') + '\n```\n\n';
+  });
+  const blob = new Blob([md], {type:'text/markdown'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'winpeas-report.md'; a.click();
+  URL.revokeObjectURL(url);
+};
+
+window.exportWinpeasJSON = function() {
+  const data = window.LAST_WINPEAS_DATA;
+  if (!data) return;
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'winpeas-report.json'; a.click();
+  URL.revokeObjectURL(url);
+};
 
 })();

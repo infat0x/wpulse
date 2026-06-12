@@ -238,6 +238,8 @@ window.registerTool({
     h += `<div class="export-bar">
       <div class="export-left">Last analyzed: ${new Date().toLocaleString()}</div>
       <div class="export-right">
+        <button class="export-btn" onclick="toggleAllWpscan(true)">Expand All</button>
+        <button class="export-btn" onclick="toggleAllWpscan(false)">Collapse All</button>
         <button class="export-btn" onclick="exportJSON()">Export JSON</button>
         <button class="export-btn" onclick="exportCSV()">Export CSV</button>
       </div>
@@ -374,5 +376,27 @@ window.registerTool({
     return { title: data.target, badges: badges.join('') };
   }
 });
+
+window.toggleAllWpscan = function(open) {
+  const plugins = document.querySelectorAll('#viewDashboard .plugin-body');
+  plugins.forEach(p => {
+    if (open) p.classList.add('open');
+    else p.classList.remove('open');
+  });
+  const vulns = document.querySelectorAll('#viewDashboard .sec-body');
+  vulns.forEach(v => {
+    if (open) v.classList.add('open');
+    else v.classList.remove('open');
+    // Also toggle the chevron
+    if (v.id && v.id.endsWith('Body')) {
+      const cid = v.id.replace('Body', 'Chev');
+      const c = document.getElementById(cid);
+      if (c) {
+        if (open) c.classList.add('open');
+        else c.classList.remove('open');
+      }
+    }
+  });
+};
 
 })();
