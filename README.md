@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/Category-Security-red?style=flat&logo=security" alt="Security">
   </p>
 </div>
-Browser-based WPScan output analyzer. Paste your scan results and get instant vulnerability dashboard with severity classification, CVE extraction, and advanced filtering.
+Browser-based Security Multi-Tool Analyzer. Select a tool from the dashboard, paste your scan results (WPScan, Nmap), and get an instant vulnerability and service dashboard with severity classification, CVE extraction, and advanced filtering. Runs entirely in the browser.
 
 **Live Demo:** https://infat0x.github.io/wpulse/
 

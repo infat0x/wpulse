@@ -75,21 +75,10 @@
           <div class="hero-dot"></div>
           <span class="hero-label">Security Intelligence</span>
         </div>
-        <h1>SCAN<br><em>ANALYZER.</em></h1>
-        <p class="hero-desc">Paste your WPScan output to get instant vulnerability analysis, CVE extraction, and security intelligence — all in your browser.</p>
-        <div class="hero-actions">
-          <button class="btn btn-primary" onclick="openInputPanel()" style="height:44px;padding:0 28px;font-size:13px">
-            <span>✏️</span>
-            <span>Paste Output</span>
-          </button>
-          <button class="btn btn-secondary" onclick="loadExample()" style="height:44px;padding:0 28px;font-size:13px">
-            Load Example
-          </button>
-        </div>
-        <div class="hero-kbd">
-          <span><kbd>Ctrl+Enter</kbd> to analyze</span>
-          <span>·</span>
-          <span>Drag & drop .txt files</span>
+        <h1>MULTI-TOOL<br><em>ANALYZER.</em></h1>
+        <p class="hero-desc">Select a security tool below to parse and analyze your scan output instantly.</p>
+        <div id="toolGrid" class="tool-grid">
+          <!-- Tool cards will be injected here by app.js -->
         </div>
       </div>
     </div>
@@ -99,18 +88,18 @@
       <div style="max-width:800px;margin:40px auto;padding:0 32px">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
           <div class="hero-dot"></div>
-          <span class="sidebar-label">Paste WPScan Output</span>
-          <button class="btn btn-ghost" onclick="showView('dashboard')" style="margin-left:auto">← Back</button>
+          <span class="sidebar-label" id="inputPanelTitle">Paste Output</span>
+          <button class="btn btn-ghost" onclick="showView('home')" style="margin-left:auto">← Back</button>
         </div>
         <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-          <textarea id="raw" spellcheck="false" autocomplete="off" style="width:100%;min-height:400px;background:var(--bg-input);border:none;color:var(--txt);font-family:var(--mono);font-size:12px;padding:20px;resize:vertical;outline:none;line-height:1.8" placeholder="Paste your WPScan output here...&#10;&#10;Example:&#10;wpscan --url http://target --enumerate vp --api-token TOKEN"></textarea>
+          <textarea id="raw" spellcheck="false" autocomplete="off" style="width:100%;min-height:400px;background:var(--bg-input);border:none;color:var(--txt);font-family:var(--mono);font-size:12px;padding:20px;resize:vertical;outline:none;line-height:1.8" placeholder="Paste your output here..."></textarea>
           <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center">
             <button class="btn btn-accent" id="analyzeBtn" onclick="go()">
               <div class="spin"></div>
               <span class="btn-text">ANALYZE</span>
             </button>
             <button class="btn btn-secondary" onclick="document.getElementById('raw').value=''">Clear</button>
-            <button class="btn btn-ghost" onclick="loadExample()">Load Example</button>
+            <button class="btn btn-ghost" id="loadExampleBtn" onclick="loadExample()">Load Example</button>
           </div>
         </div>
       </div>

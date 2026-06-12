@@ -193,6 +193,10 @@ window.exportCSV = function() {
 window.registerTool({
   id: 'wpscan',
   name: 'WPScan',
+  icon: '🛡️',
+  description: 'Analyze WPScan vulnerabilities, CVEs, and outdated plugins.',
+  placeholder: 'Paste your WPScan output here...\n\nExample:\nwpscan --url http://target --enumerate vp --api-token TOKEN',
+  exampleFile: './example-input.txt',
   match: function(raw) {
     return raw.includes('[+] URL:') || raw.includes('WPScan');
   },

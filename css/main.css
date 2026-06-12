@@ -1102,6 +1102,72 @@ a:hover { text-decoration: underline; }
 }
 
 /* ═══════════════════════════════════════════════════════
+   TOOL GRID (HOME PAGE)
+═══════════════════════════════════════════════════════ */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.6s var(--ease);
+}
+
+.tool-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--border-strong);
+  transition: background 0.2s;
+}
+
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  border-color: var(--accent-bd);
+}
+
+.tool-card:hover::before {
+  background: var(--accent);
+}
+
+.tool-card-icon {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.tool-card-title {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--txt);
+  margin-bottom: 12px;
+}
+
+.tool-card-desc {
+  font-size: 14px;
+  color: var(--txt-2);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
@@ -1121,4 +1187,5 @@ a:hover { text-decoration: underline; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .target-header { flex-direction: column; align-items: flex-start; gap: 10px; }
   .target-badges { margin-left: 0; }
+  .tool-grid { grid-template-columns: 1fr; }
 }

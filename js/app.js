@@ -33,10 +33,31 @@ function showView(view) {
   if (view === 'input') document.getElementById('navInput').classList.add('active');
 }
 
-function openInputPanel() {
+function renderToolGrid() {
+  const grid = document.getElementById('toolGrid');
+  if (!grid) return;
+  grid.innerHTML = window.WPulseTools.map(t => `
+    <div class="tool-card" onclick="selectTool('${t.id}')">
+      <div class="tool-card-icon">${t.icon || '🛠️'}</div>
+      <div class="tool-card-title">${esc(t.name)}</div>
+      <div class="tool-card-desc">${esc(t.description || '')}</div>
+    </div>
+  `).join('');
+}
+
+window.selectTool = function(id) {
+  const t = window.WPulseTools.find(x => x.id === id);
+  if (!t) return;
+  window.ACTIVE_TOOL = t;
+  document.getElementById('inputPanelTitle').textContent = `Paste ${t.name} Output`;
+  document.getElementById('raw').placeholder = t.placeholder || 'Paste your output here...';
+  
+  const btn = document.getElementById('loadExampleBtn');
+  if (btn) btn.style.display = (t.exampleFile || t.exampleText) ? 'inline-flex' : 'none';
+  
   showView('input');
   setTimeout(() => document.getElementById('raw').focus(), 100);
-}
+};
 
 let sidebarOpen = false;
 function toggleSidebar() {
@@ -99,10 +120,12 @@ function go() {
   setStatus('Analyzing…');
   setTimeout(() => {
     try {
-      let matchedTool = window.WPulseTools.find(t => t.match(raw));
-      if (!matchedTool) throw new Error('No compatible tool found for this output.');
-      
-      window.ACTIVE_TOOL = matchedTool;
+      let matchedTool = window.ACTIVE_TOOL;
+      if (!matchedTool) {
+        matchedTool = window.WPulseTools.find(t => t.match(raw));
+        if (!matchedTool) throw new Error('Please select a tool first, or drop a recognized file.');
+        window.ACTIVE_TOOL = matchedTool;
+      }
       const data = matchedTool.parse(raw);
       window.LAST_DATA = data;
       btn.classList.remove('loading');
@@ -130,11 +153,20 @@ function go() {
 }
 
 function loadExample() {
-  setStatus('Loading example…');
-  fetch('./example-input.txt')
-    .then(r => { if (!r.ok) throw new Error('Not found'); return r.text(); })
-    .then(txt => { document.getElementById('raw').value = txt; showView('input'); go(); })
-    .catch(() => setStatus('Could not load example file'));
+  const t = window.ACTIVE_TOOL;
+  if (!t) return;
+  if (t.exampleText) {
+    document.getElementById('raw').value = t.exampleText;
+    go();
+    return;
+  }
+  if (t.exampleFile) {
+    setStatus('Loading example…');
+    fetch(t.exampleFile)
+      .then(r => { if (!r.ok) throw new Error('Not found'); return r.text(); })
+      .then(txt => { document.getElementById('raw').value = txt; go(); })
+      .catch(() => setStatus('Could not load example file'));
+  }
 }
 
 function setStatus(msg) { document.getElementById('status-text').textContent = msg; }
@@ -173,7 +205,7 @@ function togP(pid) {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => renderHistoryList());
+  document.addEventListener('DOMContentLoaded', () => { renderHistoryList(); renderToolGrid(); });
 } else {
-  renderHistoryList();
+  renderHistoryList(); renderToolGrid();
 }
