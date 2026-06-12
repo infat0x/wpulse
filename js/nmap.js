@@ -156,7 +156,7 @@ window.registerTool({
   },
   saveHistoryParams: function(data) {
     const totalPorts = data.reduce((acc, host) => acc + host.ports.length, 0);
-    const badges = \`<span class="hist-badge hb-h">\${totalPorts} Ports</span>\`;
+    const badges = `<span class="hist-badge hb-h">${totalPorts} Ports</span>`;
     return { title: data[0] ? data[0].ip : 'Nmap Scan', badges: badges };
   }
 });
