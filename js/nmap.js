@@ -1,6 +1,3 @@
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
 
 function parseNmap(raw) {
   const lines = raw.split(/\r?\n/);
