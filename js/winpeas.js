@@ -29,7 +29,7 @@ window.registerTool({
       
       // Detect section headers
       if (line.includes('=========||')) {
-        let title = line.replace(/=+||+/g, '').replace(/\|/g, '').trim();
+        let title = line.replace(/=+|\|+/g, '').trim();
         if (title) {
           if (currentSection.lines.length > 0) {
             sections.push(currentSection);
