@@ -11,7 +11,7 @@ window.registerTool({
   icon: `<svg viewBox="0 0 88 88" width="56" height="56" fill="var(--accent)"><polygon points="0,12 35,7 35,42 0,42"/><polygon points="39,6 88,0 88,42 39,42"/><polygon points="0,46 35,46 35,80 0,75"/><polygon points="39,46 88,46 88,88 39,81"/></svg>`,
   description: 'Parse WinPEAS output to identify Windows privilege escalation paths and misconfigurations.',
   placeholder: 'Paste your WinPEAS output here...\n\nExample:\n=========|| SYSTEM INFORMATION ||=========\n...',
-  exampleText: '=========|| SYSTEM INFORMATION ||=========\nHostname: WIN-SERVER\nOS: Windows Server 2019\n\n=========|| PRIVILEGES ||=========\nSeDebugPrivilege  Enabled\n\n=========|| USERS AND GROUPS ||=========\nAdministrator\nGuest\n\n=========|| UNQUOTED SERVICE PATHS ||=========\nUnquoted Service Path found!\nName: VulnerableService\nPathName: C:\\Program Files\\Vuln App\\service.exe',
+  exampleFile: './examples/example-winpeas-input.txt',
   match: function(raw) {
     return /=========\|\||winpeas/i.test(raw);
   },
