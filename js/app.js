@@ -26,12 +26,24 @@ function showView(view) {
 
   if (view === 'dashboard' && !window.LAST_DATA) {
     document.getElementById('viewInput').style.display = '';
+    view = 'hero';
   }
+
+  const backBtn = document.getElementById('floatingBackBtn');
+  if (backBtn) backBtn.style.display = view === 'hero' ? 'none' : 'flex';
 
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   if (view === 'dashboard' || view === 'hero') document.getElementById('navDashboard').classList.add('active');
   if (view === 'input') document.getElementById('navInput').classList.add('active');
 }
+
+window.goBackBtnClicked = function() {
+  if (document.getElementById('viewDashboard').style.display !== 'none') {
+    showView('input');
+  } else {
+    showView('hero');
+  }
+};
 
 function renderToolGrid() {
   const grid = document.getElementById('toolGrid');
