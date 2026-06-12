@@ -6,6 +6,8 @@
   <p>
     <img src="https://img.shields.io/badge/Language-JavaScript-yellow?style=flat&logo=javascript" alt="JS">
     <img src="https://img.shields.io/badge/Tool-WPScan-blue?style=flat&logo=shield" alt="WPScan">
+    <img src="https://img.shields.io/badge/Tool-Nmap-blue?style=flat&logo=shield" alt="Nmap">
+    <img src="https://img.shields.io/badge/Tool-WinPEAS-blue?style=flat&logo=shield" alt="WinPEAS">
     <img src="https://img.shields.io/badge/Category-Security-red?style=flat&logo=security" alt="Security">
   </p>
 </div>
