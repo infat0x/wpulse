@@ -4,18 +4,16 @@ window.registerTool = function(tool) {
 };
 
 if (document.documentElement.getAttribute('data-theme') === 'dark') {
-  document.getElementById('themeToggle').textContent = '☀️';
+  // Pill switch state is handled purely by CSS using html[data-theme='dark'] selector
 }
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
   if (current === 'dark') {
     document.documentElement.removeAttribute('data-theme');
     localStorage.setItem('wpulse-theme', 'light');
-    document.getElementById('themeToggle').textContent = '🌙';
   } else {
     document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.setItem('wpulse-theme', 'dark');
-    document.getElementById('themeToggle').textContent = '☀️';
   }
 }
 
