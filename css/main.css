@@ -1203,6 +1203,18 @@ html[data-theme="dark"] .floating-back-btn:hover {
 .tool-card-icon {
   font-size: 40px;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-card-icon svg {
+  color: var(--accent);
+  transition: transform 0.3s var(--ease);
+}
+
+.tool-card:hover .tool-card-icon svg {
+  transform: scale(1.1);
 }
 
 .tool-card-title {

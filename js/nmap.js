@@ -135,7 +135,7 @@ function exportNmapMD() {
 window.registerTool({
   id: 'nmap',
   name: 'Nmap',
-  icon: '🌐',
+  icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`,
   description: 'Parse Nmap scan reports and view open ports, services, and versions.',
   placeholder: 'Paste your Nmap scan output here...\n\nExample:\nNmap scan report for 192.168.1.1\nPORT     STATE SERVICE\n80/tcp   open  http',
   exampleText: 'Starting Nmap 7.92 ( https://nmap.org ) at 2023-10-27 10:00\nNmap scan report for scanme.nmap.org (45.33.32.156)\nHost is up (0.040s latency).\nNot shown: 996 closed tcp ports\nPORT      STATE SERVICE    VERSION\n22/tcp    open  ssh        OpenSSH 6.6.1p1\n80/tcp    open  http       Apache httpd 2.4.7\n9929/tcp  open  nping-echo Nping echo\n31337/tcp open  tcpwrapped\n\nNmap done: 1 IP address (1 host up) scanned in 12.08 seconds',
