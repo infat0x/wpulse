@@ -1,3 +1,7 @@
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function parseNmap(raw) {
   const lines = raw.split(/\r?\n/);
   const hosts = [];
@@ -9,28 +13,35 @@ function parseNmap(raw) {
     if (line.startsWith('Nmap scan report for') || line.includes('Nmap scan report for')) {
       const match = line.match(/Nmap scan report for (.+)/);
       if (match) {
-        currentHost = { ip: match[1], ports: [] };
+        currentHost = { ip: match[1], ports: [], os: null, info: null };
         hosts.push(currentHost);
         inPortSection = false;
       }
-    } else if (line.startsWith('PORT') && line.includes('STATE') && line.includes('SERVICE')) {
-      inPortSection = true;
-    } else if (inPortSection && currentHost) {
-      if (line === '') {
+    } else if (currentHost) {
+      if (line.startsWith('Service Info:')) {
+        currentHost.info = line.replace('Service Info:', '').trim();
+        const osMatch = currentHost.info.match(/OS:\s*([^;]+)/);
+        if (osMatch) currentHost.os = osMatch[1].trim();
         inPortSection = false;
-        continue;
-      }
-      
-      const parts = line.split(/\s+/);
-      if (parts.length >= 3 && /^\d+\/[a-z]+$/.test(parts[0])) {
-        const port = parts[0];
-        const state = parts[1];
-        const service = parts[2];
-        const version = parts.slice(3).join(' ');
-        currentHost.ports.push({ port, state, service, version });
-      } else {
-        if (!/^\d/.test(parts[0]) && !line.startsWith('|')) {
-           inPortSection = false;
+      } else if (line.startsWith('PORT') && line.includes('STATE') && line.includes('SERVICE')) {
+        inPortSection = true;
+      } else if (inPortSection) {
+        if (line === '') {
+          inPortSection = false;
+          continue;
+        }
+        
+        const parts = line.split(/\s+/);
+        if (parts.length >= 3 && /^\d+\/[a-z]+$/.test(parts[0])) {
+          const port = parts[0];
+          const state = parts[1];
+          const service = parts[2];
+          const version = parts.slice(3).join(' ');
+          currentHost.ports.push({ port, state, service, version });
+        } else {
+          if (!/^\d/.test(parts[0]) && !line.startsWith('|')) {
+             inPortSection = false;
+          }
         }
       }
     }
@@ -44,33 +55,48 @@ function renderNmapTable(hosts) {
   let html = '<div class="export-bar" style="margin-bottom:20px;text-align:right;"><button class="btn btn-secondary" onclick="exportNmapMD()">Export Markdown</button></div>';
   
   for (const host of hosts) {
+    let badgesHtml = `<span class="sec-count">${host.ports.length} ports</span>`;
+    if (host.os) {
+      badgesHtml += `<span class="sec-count" style="background:var(--accent-bg);color:var(--accent);border-color:var(--accent-bd);">${esc(host.os)}</span>`;
+    }
+
     html += `
     <div class="section" style="margin-bottom: 20px;">
       <div class="sec-header">
-        <div class="sec-title">Host: ${host.ip} <span class="sec-count">${host.ports.length} ports</span></div>
+        <div class="sec-title">Host: ${esc(host.ip)} ${badgesHtml}</div>
       </div>
-      <div class="sec-body open" style="padding: 0;">
+      <div class="sec-body open" style="padding: 0;">`;
+      
+    if (host.info) {
+      html += `
+        <div style="padding: 12px 16px; background: var(--bg-hover); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--txt-2); display: flex; gap: 8px; align-items: center;">
+          <span style="font-size: 14px;">ℹ️</span> <strong>Service Info:</strong> ${esc(host.info)}
+        </div>`;
+    }
+
+    html += `
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
           <thead>
-            <tr style="border-bottom: 1px solid var(--border); background: var(--bg-hover);">
-              <th style="padding: 12px; font-weight: 600;">Port</th>
-              <th style="padding: 12px; font-weight: 600;">State</th>
-              <th style="padding: 12px; font-weight: 600;">Service</th>
-              <th style="padding: 12px; font-weight: 600;">Version</th>
+            <tr style="border-bottom: 1px solid var(--border); background: var(--bg-white);">
+              <th style="padding: 12px 16px; font-weight: 600;">Port</th>
+              <th style="padding: 12px 16px; font-weight: 600;">State</th>
+              <th style="padding: 12px 16px; font-weight: 600;">Service</th>
+              <th style="padding: 12px 16px; font-weight: 600;">Version</th>
             </tr>
           </thead>
           <tbody>`;
+          
     if (host.ports.length === 0) {
-      html += `<tr><td colspan="4" style="padding: 12px; text-align: center; color: var(--txt-3);">No open ports found.</td></tr>`;
+      html += `<tr><td colspan="4" style="padding: 16px; text-align: center; color: var(--txt-3);">No open ports found.</td></tr>`;
     } else {
       for (const port of host.ports) {
         let stateColor = port.state === 'open' ? 'var(--low)' : 'var(--medium)';
         html += `
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 12px;"><strong>${port.port}</strong></td>
-              <td style="padding: 12px;"><span style="color:${stateColor}; font-weight:500">${port.state}</span></td>
-              <td style="padding: 12px;">${port.service}</td>
-              <td style="padding: 12px; color: var(--txt-2);">${port.version}</td>
+            <tr style="border-bottom: 1px solid var(--border); background: var(--bg-white);">
+              <td style="padding: 12px 16px;"><strong>${esc(port.port)}</strong></td>
+              <td style="padding: 12px 16px;"><span style="color:${stateColor}; font-weight:500">${esc(port.state)}</span></td>
+              <td style="padding: 12px 16px;">${esc(port.service)}</td>
+              <td style="padding: 12px 16px; color: var(--txt-2);">${esc(port.version)}</td>
             </tr>`;
       }
     }
