@@ -78,7 +78,7 @@ function renderNmapTable(hosts) {
       <button class="export-btn" onclick="toggleAllNmap(true)">Expand All</button>
       <button class="export-btn" onclick="toggleAllNmap(false)">Collapse All</button>
       <button class="export-btn" onclick="copyNmapIPs()">Copy IPs</button>
-      <button class="export-btn" onclick="exportNmapMD()">Export MD</button>
+      <button class="export-btn" onclick="copyNmapMD()">Copy as MD</button>
       <button class="export-btn" onclick="exportNmapJSON()">Export JSON</button>
     </div>
   </div>`;
@@ -158,36 +158,46 @@ function renderNmapTable(hosts) {
   return html;
 }
 
-function exportNmapMD() {
+window.copyNmapMD = function() {
   const hosts = window.LAST_NMAP_DATA;
   if (!hosts) return;
   
-  let md = '# Nmap Scan Report\n\n';
+  let md = '### Nmap Scan Summary\n\n';
+  md += '| IP Address | Open Ports | Services | OS / Info |\n';
+  md += '|---|---|---|---|\n';
+  
   for (const host of hosts) {
-    md += `## Host: ${host.ip}\n`;
-    if (host.hostScripts && host.hostScripts.length > 0) {
-      md += `**Host Scripts:**\n`;
-      for (const s of host.hostScripts) md += `- ${s}\n`;
-      md += `\n`;
-    }
-    if (host.ports.length === 0) {
-      md += `*No open ports found.*\n\n`;
-    } else {
-      md += `| Port | State | Service | Version | Scripts |\n`;
-      md += `|---|---|---|---|---|\n`;
-      for (const port of host.ports) {
-        let scriptsStr = port.scripts && port.scripts.length ? `${port.scripts.length} info` : '';
-        md += `| ${port.port} | ${port.state} | ${port.service} | ${port.version} | ${scriptsStr} |\n`;
-      }
-      md += `\n`;
-    }
+    let portList = host.ports.map(p => p.port).join(', ');
+    let svcList = host.ports.map(p => p.service).join(', ');
+    let osInfo = (host.os || host.info || '').replace(/\|/g, '\\|');
+    md += `| **${host.ip}** | ${portList || 'None'} | ${svcList || '-'} | ${osInfo || '-'} |\n`;
   }
   
-  const blob = new Blob([md], {type:'text/markdown'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'nmap-report.md'; a.click();
-  URL.revokeObjectURL(url);
-}
+  md += '\n### Detailed Ports & Vulnerabilities\n\n';
+  md += '| IP Address | Port | State | Service | Version | Scripts / Info |\n';
+  md += '|---|---|---|---|---|---|\n';
+  
+  for (const host of hosts) {
+    if (host.ports.length === 0) {
+      md += `| **${host.ip}** | - | - | - | - | No open ports |\n`;
+    } else {
+      for (const port of host.ports) {
+        let scriptsStr = port.scripts && port.scripts.length ? `${port.scripts.length} info` : '';
+        let versionStr = port.version.replace(/\|/g, '\\|');
+        let serviceStr = port.service.replace(/\|/g, '\\|');
+        md += `| **${host.ip}** | ${port.port} | ${port.state} | ${serviceStr} | ${versionStr} | ${scriptsStr} |\n`;
+      }
+    }
+  }
+
+  navigator.clipboard.writeText(md).then(() => {
+    const statusEl = document.getElementById('status-text');
+    if (statusEl) {
+      statusEl.textContent = 'Markdown copied to clipboard!';
+      setTimeout(() => statusEl.textContent = 'Ready', 3000);
+    }
+  });
+};
 
 window.toggleAllNmap = function(open) {
   const bodies = document.querySelectorAll('#viewDashboard .sec-body');
