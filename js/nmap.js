@@ -69,7 +69,7 @@ function renderNmapTable(hosts) {
     html += `
     <div class="section" style="margin-bottom: 20px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border);">
       <div class="sec-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';" style="cursor: pointer; background-color: var(--bg-white); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; user-select: none;">
-        <div class="sec-title" style="margin: 0; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--accent);">Host: ${esc(host.ip)} ${badgesHtml}</div>
+        <div class="sec-title" style="margin: 0; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--accent);">Host: <span onclick="window.copySingleIP('${esc(host.ip)}', event)" title="Click to copy IP" style="cursor: copy; text-decoration: underline dashed; text-underline-offset: 4px;">${esc(host.ip)}</span> ${badgesHtml}</div>
         <div style="font-size: 12px; color: var(--txt-3);">▼ Click to toggle</div>
       </div>
       <div class="sec-body" style="padding: 0; display: none; background: var(--bg-white);">`;
@@ -156,6 +156,17 @@ window.copyNmapIPs = function() {
     const statusEl = document.getElementById('status-text');
     if (statusEl) {
       statusEl.textContent = 'IPs copied to clipboard!';
+      setTimeout(() => statusEl.textContent = 'Ready', 3000);
+    }
+  });
+};
+
+window.copySingleIP = function(ip, event) {
+  if (event) event.stopPropagation();
+  navigator.clipboard.writeText(ip).then(() => {
+    const statusEl = document.getElementById('status-text');
+    if (statusEl) {
+      statusEl.textContent = 'IP ' + ip + ' copied!';
       setTimeout(() => statusEl.textContent = 'Ready', 3000);
     }
   });
