@@ -172,23 +172,6 @@ window.copyNmapMD = function() {
     let osInfo = (host.os || host.info || '').replace(/\|/g, '\\|');
     md += `| **${host.ip}** | ${portList || 'None'} | ${svcList || '-'} | ${osInfo || '-'} |\n`;
   }
-  
-  md += '\n### Detailed Ports & Vulnerabilities\n\n';
-  md += '| IP Address | Port | State | Service | Version | Scripts / Info |\n';
-  md += '|---|---|---|---|---|---|\n';
-  
-  for (const host of hosts) {
-    if (host.ports.length === 0) {
-      md += `| **${host.ip}** | - | - | - | - | No open ports |\n`;
-    } else {
-      for (const port of host.ports) {
-        let scriptsStr = port.scripts && port.scripts.length ? `${port.scripts.length} info` : '';
-        let versionStr = port.version.replace(/\|/g, '\\|');
-        let serviceStr = port.service.replace(/\|/g, '\\|');
-        md += `| **${host.ip}** | ${port.port} | ${port.state} | ${serviceStr} | ${versionStr} | ${scriptsStr} |\n`;
-      }
-    }
-  }
 
   navigator.clipboard.writeText(md).then(() => {
     const statusEl = document.getElementById('status-text');
