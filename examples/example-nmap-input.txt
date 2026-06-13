@@ -1,105 +1,324 @@
-root@kali:~/chLABS# nmap 192.168.248.0/24 -sV -oA Relia/nmap/relia_192
-Starting Nmap 7.98 ( https://nmap.org ) at 2026-06-12 02:46 -0400
-Nmap scan report for 192.168.248.189
-Host is up (0.089s latency).
+kali@kali:~/chLABS/Relia$ sudo nmap -sCV 192.168.156.0/24 -oA nmap/ext
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-06-13 05:25 -0400
+Nmap scan report for 192.168.156.189
+Host is up (0.091s latency).
 Not shown: 992 closed tcp ports (reset)
 PORT     STATE SERVICE       VERSION
 25/tcp   open  smtp          hMailServer smtpd
+| smtp-commands: MAIL, SIZE 20480000, AUTH LOGIN, HELP
+|_ 211 DATA HELO EHLO MAIL NOOP QUIT RCPT RSET SAML TURN VRFY
 110/tcp  open  pop3          hMailServer pop3d
+|_pop3-capabilities: USER TOP UIDL
 135/tcp  open  msrpc         Microsoft Windows RPC
 139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
 143/tcp  open  imap          hMailServer imapd
+|_imap-capabilities: IMAP4 CHILDREN IDLE OK IMAP4rev1 SORT completed RIGHTS=texkA0001 CAPABILITY NAMESPACE QUOTA ACL
 445/tcp  open  microsoft-ds?
 587/tcp  open  smtp          hMailServer smtpd
+| smtp-commands: MAIL, SIZE 20480000, AUTH LOGIN, HELP
+|_ 211 DATA HELO EHLO MAIL NOOP QUIT RCPT RSET SAML TURN VRFY
 5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
 Service Info: Host: MAIL; OS: Windows; CPE: cpe:/o:microsoft:windows
 
-Nmap scan report for 192.168.248.191
-Host is up (0.089s latency).
+Host script results:
+| smb2-time: 
+|   date: 2026-06-13T09:27:01
+|_  start_date: N/A
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+
+Nmap scan report for 192.168.156.191
+Host is up (0.094s latency).
 Not shown: 994 closed tcp ports (reset)
 PORT     STATE SERVICE       VERSION
 80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: 401 - Unauthorized: Access is denied due to invalid credentials.
+| http-auth: 
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Basic realm=192.168.156.191
 135/tcp  open  msrpc         Microsoft Windows RPC
 139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
 445/tcp  open  microsoft-ds?
 3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| ssl-cert: Subject: commonName=login.relia.com
+| Not valid before: 2026-06-12T07:39:56
+|_Not valid after:  2026-12-12T07:39:56
+|_ssl-date: 2026-06-13T09:27:50+00:00; +2s from scanner time.
+| rdp-ntlm-info: 
+|   Target_Name: RELIA
+|   NetBIOS_Domain_Name: RELIA
+|   NetBIOS_Computer_Name: LOGIN
+|   DNS_Domain_Name: relia.com
+|   DNS_Computer_Name: login.relia.com
+|   DNS_Tree_Name: relia.com
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-06-13T09:26:58+00:00
 5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
-Nmap scan report for 192.168.248.245
-Host is up (0.090s latency).
+Host script results:
+| smb2-time: 
+|   date: 2026-06-13T09:27:09
+|_  start_date: N/A
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+|_clock-skew: mean: 1s, deviation: 0s, median: 1s
+
+Nmap scan report for 192.168.156.245
+Host is up (0.094s latency).
 Not shown: 995 closed tcp ports (reset)
 PORT     STATE SERVICE  VERSION
 21/tcp   open  ftp      vsftpd 2.0.8 or later
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to 192.168.45.216
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 1
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
 80/tcp   open  http     Apache httpd 2.4.49 ((Unix) OpenSSL/1.1.1f mod_wsgi/4.9.4 Python/3.8)
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Apache/2.4.49 (Unix) OpenSSL/1.1.1f mod_wsgi/4.9.4 Python/3.8
+|_http-title: RELIA Corp.
 443/tcp  open  ssl/http Apache httpd 2.4.49 ((Unix) OpenSSL/1.1.1f mod_wsgi/4.9.4 Python/3.8)
+|_ssl-date: TLS randomness does not represent time
+|_http-title: RELIA Corp.
+| http-methods: 
+|_  Potentially risky methods: TRACE
+| ssl-cert: Subject: commonName=web01.relia.com/organizationName=RELIA/stateOrProvinceName=Berlin/countryName=DE
+| Not valid before: 2022-10-12T08:55:44
+|_Not valid after:  2032-10-09T08:55:44
+| tls-alpn: 
+|_  http/1.1
+|_http-server-header: Apache/2.4.49 (Unix) OpenSSL/1.1.1f mod_wsgi/4.9.4 Python/3.8
 2222/tcp open  ssh      OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 30:0c:6c:9b:ac:07:47:5e:df:6d:ff:38:63:38:2a:fd (RSA)
+|   256 f3:a9:70:76:c8:d4:c4:17:f4:39:1f:be:58:9d:1f:a5 (ECDSA)
+|_  256 21:a0:79:82:2d:e6:2a:76:11:24:2f:7e:2e:a8:c7:83 (ED25519)
 8000/tcp open  http     Apache httpd 2.4.49 ((Unix) OpenSSL/1.1.1f mod_wsgi/4.9.4 Python/3.8)
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-title: Site doesn't have a title (text/html).
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-server-header: Apache/2.4.49 (Unix) OpenSSL/1.1.1f mod_wsgi/4.9.4 Python/3.8
 Service Info: Host: RELIA; OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
-Nmap scan report for 192.168.248.246
-Host is up (0.089s latency).
+Nmap scan report for 192.168.156.246
+Host is up (0.092s latency).
 Not shown: 997 closed tcp ports (reset)
 PORT     STATE SERVICE  VERSION
 80/tcp   open  http     Apache httpd 2.4.52 ((Ubuntu))
+|_http-server-header: Apache/2.4.52 (Ubuntu)
+|_http-title: Code Validation
 443/tcp  open  ssl/http Apache httpd 2.4.52 ((Ubuntu))
+|_http-title: Code Validation
+| ssl-cert: Subject: commonName=demo
+| Subject Alternative Name: DNS:demo
+| Not valid before: 2022-10-12T07:46:27
+|_Not valid after:  2032-10-09T07:46:27
+| tls-alpn: 
+|_  http/1.1
+|_ssl-date: TLS randomness does not represent time
+|_http-server-header: Apache/2.4.52 (Ubuntu)
 2222/tcp open  ssh      OpenSSH 8.9p1 Ubuntu 3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 42:2d:8d:48:ad:10:dd:ff:70:25:8b:46:2e:5c:ff:1d (ECDSA)
+|_  256 aa:4a:c3:27:b1:19:30:d7:63:91:96:ae:63:3c:07:dc (ED25519)
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
-Nmap scan report for 192.168.248.247
-Host is up (0.091s latency).
+Nmap scan report for 192.168.156.247
+Host is up (0.095s latency).
 Not shown: 993 closed tcp ports (reset)
 PORT     STATE SERVICE       VERSION
 80/tcp   open  http          Apache httpd 2.4.54 ((Win64) OpenSSL/1.1.1p PHP/8.1.10)
+|_http-server-header: Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.1.10
+|_http-title: RELIA - New Hire Information
 135/tcp  open  msrpc         Microsoft Windows RPC
 139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
 443/tcp  open  ssl/http      Apache httpd 2.4.54 ((Win64) OpenSSL/1.1.1p PHP/8.1.10)
+| ssl-cert: Subject: commonName=localhost
+| Not valid before: 2009-11-10T23:48:47
+|_Not valid after:  2019-11-08T23:48:47
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|_  http/1.1
+|_http-server-header: Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.1.10
+|_http-title: RELIA - New Hire Information
 445/tcp  open  microsoft-ds?
 3389/tcp open  ms-wbt-server Microsoft Terminal Services
+|_ssl-date: 2026-06-13T09:27:49+00:00; +1s from scanner time.
+| ssl-cert: Subject: commonName=WEB02
+| Not valid before: 2026-01-23T17:15:22
+|_Not valid after:  2026-07-25T17:15:22
+| rdp-ntlm-info: 
+|   Target_Name: WEB02
+|   NetBIOS_Domain_Name: WEB02
+|   NetBIOS_Computer_Name: WEB02
+|   DNS_Domain_Name: WEB02
+|   DNS_Computer_Name: WEB02
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-06-13T09:26:55+00:00
 5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
-Nmap scan report for 192.168.248.248
-Host is up (0.090s latency).
+Host script results:
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2026-06-13T09:27:14
+|_  start_date: N/A
+|_clock-skew: mean: 1s, deviation: 0s, median: 0s
+
+Nmap scan report for 192.168.156.248
+Host is up (0.091s latency).
 Not shown: 994 closed tcp ports (reset)
 PORT     STATE SERVICE       VERSION
 80/tcp   open  http          Microsoft IIS httpd 10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+| http-robots.txt: 16 disallowed entries (15 shown)
+| /*/ctl/ /admin/ /App_Browsers/ /App_Code/ /App_Data/ 
+| /App_GlobalResources/ /bin/ /Components/ /Config/ /contest/ /controls/ 
+|_/Documentation/ /HttpModules/ /Install/ /Providers/
+|_http-title: Home
 135/tcp  open  msrpc         Microsoft Windows RPC
 139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
 445/tcp  open  microsoft-ds?
 3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info: 
+|   Target_Name: EXTERNAL
+|   NetBIOS_Domain_Name: EXTERNAL
+|   NetBIOS_Computer_Name: EXTERNAL
+|   DNS_Domain_Name: EXTERNAL
+|   DNS_Computer_Name: EXTERNAL
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-06-13T09:27:02+00:00
+|_ssl-date: 2026-06-13T09:27:49+00:00; +1s from scanner time.
+| ssl-cert: Subject: commonName=EXTERNAL
+| Not valid before: 2026-06-12T07:39:47
+|_Not valid after:  2026-12-12T07:39:47
 5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
-Nmap scan report for 192.168.248.249
-Host is up (0.090s latency).
+Host script results:
+| smb2-time: 
+|   date: 2026-06-13T09:27:18
+|_  start_date: N/A
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+|_clock-skew: mean: 1s, deviation: 0s, median: 0s
+
+Nmap scan report for 192.168.156.249
+Host is up (0.091s latency).
 Not shown: 993 closed tcp ports (reset)
 PORT     STATE SERVICE       VERSION
 80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-title: IIS Windows Server
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
 135/tcp  open  msrpc         Microsoft Windows RPC
 139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
 445/tcp  open  microsoft-ds?
 3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| ssl-cert: Subject: commonName=LEGACY
+| Not valid before: 2026-06-12T07:39:49
+|_Not valid after:  2026-12-12T07:39:49
+|_ssl-date: 2026-06-13T09:27:49+00:00; +1s from scanner time.
+| rdp-ntlm-info: 
+|   Target_Name: LEGACY
+|   NetBIOS_Domain_Name: LEGACY
+|   NetBIOS_Computer_Name: LEGACY
+|   DNS_Domain_Name: LEGACY
+|   DNS_Computer_Name: LEGACY
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-06-13T09:27:00+00:00
 5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
 8000/tcp open  http          Apache httpd 2.4.54 ((Win64) OpenSSL/1.1.1p PHP/7.4.30)
+|_http-server-header: Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/7.4.30
+| http-title: Welcome to XAMPP
+|_Requested resource was http://192.168.156.249:8000/dashboard/
+|_http-open-proxy: Proxy might be redirecting requests
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
-Nmap scan report for 192.168.248.250
-Host is up (0.088s latency).
+Host script results:
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2026-06-13T09:27:23
+|_  start_date: N/A
+
+Nmap scan report for 192.168.156.250
+Host is up (0.090s latency).
 Not shown: 996 closed tcp ports (reset)
 PORT     STATE SERVICE       VERSION
 135/tcp  open  msrpc         Microsoft Windows RPC
 139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
 445/tcp  open  microsoft-ds?
 3389/tcp open  ms-wbt-server Microsoft Terminal Services
+|_ssl-date: 2026-06-13T09:27:50+00:00; +2s from scanner time.
+| ssl-cert: Subject: commonName=WINPREP
+| Not valid before: 2026-03-22T07:56:32
+|_Not valid after:  2026-09-21T07:56:32
+| rdp-ntlm-info: 
+|   Target_Name: WINPREP
+|   NetBIOS_Domain_Name: WINPREP
+|   NetBIOS_Computer_Name: WINPREP
+|   DNS_Domain_Name: WINPREP
+|   DNS_Computer_Name: WINPREP
+|   Product_Version: 10.0.22000
+|_  System_Time: 2026-06-13T09:27:03+00:00
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
-Nmap scan report for 192.168.248.254
-Host is up (0.088s latency).
-Not shown: 998 closed tcp ports (reset)
-PORT   STATE    SERVICE    VERSION
-22/tcp filtered ssh
-53/tcp open     tcpwrapped
+Host script results:
+| smb2-time: 
+|   date: 2026-06-13T09:27:29
+|_  start_date: N/A
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
 
+Nmap scan report for 192.168.156.254
+Host is up (0.095s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE    SERVICE VERSION
+22/tcp filtered ssh
+53/tcp open     domain  dnsmasq 2.89
+| dns-nsid: 
+|_  bind.version: dnsmasq-2.89
+
+Post-scan script results:
+| clock-skew: 
+|   0s: 
+|     192.168.156.250
+|     192.168.156.249
+|     192.168.156.189
+|     192.168.156.247
+|_    192.168.156.248
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 256 IP addresses (9 hosts up) scanned in 71.57 seconds
+Nmap done: 256 IP addresses (9 hosts up) scanned in 129.52 seconds

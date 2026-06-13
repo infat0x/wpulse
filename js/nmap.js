@@ -4,15 +4,17 @@ function parseNmap(raw) {
   const hosts = [];
   let currentHost = null;
   let inPortSection = false;
+  let inHostScriptSection = false;
 
   for (let line of lines) {
     line = line.trim();
     if (line.startsWith('Nmap scan report for') || line.includes('Nmap scan report for')) {
       const match = line.match(/Nmap scan report for (.+)/);
       if (match) {
-        currentHost = { ip: match[1], ports: [], os: null, info: null };
+        currentHost = { ip: match[1], ports: [], os: null, info: null, hostScripts: [] };
         hosts.push(currentHost);
         inPortSection = false;
+        inHostScriptSection = false;
       }
     } else if (currentHost) {
       if (line.startsWith('Service Info:')) {
@@ -20,8 +22,13 @@ function parseNmap(raw) {
         const osMatch = currentHost.info.match(/OS:\s*([^;]+)/);
         if (osMatch) currentHost.os = osMatch[1].trim();
         inPortSection = false;
+        inHostScriptSection = false;
+      } else if (line.startsWith('Host script results:')) {
+        inHostScriptSection = true;
+        inPortSection = false;
       } else if (line.startsWith('PORT') && line.includes('STATE') && line.includes('SERVICE')) {
         inPortSection = true;
+        inHostScriptSection = false;
       } else if (inPortSection) {
         if (line === '') {
           inPortSection = false;
@@ -34,11 +41,27 @@ function parseNmap(raw) {
           const state = parts[1];
           const service = parts[2];
           const version = parts.slice(3).join(' ');
-          currentHost.ports.push({ port, state, service, version });
+          currentHost.ports.push({ port, state, service, version, scripts: [] });
+        } else if (line.startsWith('|')) {
+          if (currentHost.ports.length > 0) {
+            let scriptLine = line.replace(/^\|_?\s*/, '');
+            currentHost.ports[currentHost.ports.length - 1].scripts.push(scriptLine);
+          }
         } else {
           if (!/^\d/.test(parts[0]) && !line.startsWith('|')) {
              inPortSection = false;
           }
+        }
+      } else if (inHostScriptSection) {
+        if (line === '') {
+          inHostScriptSection = false;
+          continue;
+        }
+        if (line.startsWith('|')) {
+          let scriptLine = line.replace(/^\|_?\s*/, '');
+          currentHost.hostScripts.push(scriptLine);
+        } else {
+          inHostScriptSection = false;
         }
       }
     }
@@ -81,6 +104,15 @@ function renderNmapTable(hosts) {
         </div>`;
     }
 
+    if (host.hostScripts && host.hostScripts.length > 0) {
+      let scriptLines = host.hostScripts.map(s => `<div style="padding-left: 12px; border-left: 2px solid var(--border); margin-bottom: 4px;">${esc(s)}</div>`).join('');
+      html += `
+        <div style="padding: 12px 16px; background: var(--bg-body); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--txt-2); font-family: monospace;">
+          <div style="margin-bottom: 8px; color: var(--txt-1);"><strong>Host Scripts (${host.hostScripts.length})</strong></div>
+          ${scriptLines}
+        </div>`;
+    }
+
     html += `
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
           <thead>
@@ -98,13 +130,23 @@ function renderNmapTable(hosts) {
     } else {
       for (const port of host.ports) {
         let stateColor = port.state === 'open' ? 'var(--low)' : 'var(--medium)';
+        
+        let scriptBadge = '';
+        let scriptsHtml = '';
+        if (port.scripts && port.scripts.length > 0) {
+          scriptBadge = `<span style="background: var(--bg-hover); padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; cursor: pointer; border: 1px solid var(--border); color: var(--txt-1); display: inline-block; vertical-align: middle;" onclick="const next = this.closest('tr').nextElementSibling; next.style.display = next.style.display === 'none' ? 'table-row' : 'none';">📝 ${port.scripts.length} Info</span>`;
+          let scriptLines = port.scripts.map(s => `<div style="padding-left: 8px; border-left: 2px solid var(--border); margin-bottom: 2px;">${esc(s)}</div>`).join('');
+          scriptsHtml = `<tr style="display: none; background: var(--bg-body);"><td colspan="4" style="padding: 12px 16px; font-family: monospace; font-size: 12px; color: var(--txt-2); white-space: pre-wrap; border-bottom: 1px solid var(--border);"><div style="margin-bottom: 6px; font-weight: 600; color: var(--txt-1);">Vulnerabilities / Info:</div>${scriptLines}</td></tr>`;
+        }
+
         html += `
             <tr style="border-bottom: 1px solid var(--border); background: var(--bg-white);">
               <td style="padding: 12px 16px;"><strong>${esc(port.port)}</strong></td>
               <td style="padding: 12px 16px;"><span style="color:${stateColor}; font-weight:500">${esc(port.state)}</span></td>
-              <td style="padding: 12px 16px;">${esc(port.service)}</td>
+              <td style="padding: 12px 16px; vertical-align: middle;">${esc(port.service)}${scriptBadge}</td>
               <td style="padding: 12px 16px; color: var(--txt-2);">${esc(port.version)}</td>
-            </tr>`;
+            </tr>
+            ${scriptsHtml}`;
       }
     }
     html += `
@@ -123,13 +165,19 @@ function exportNmapMD() {
   let md = '# Nmap Scan Report\n\n';
   for (const host of hosts) {
     md += `## Host: ${host.ip}\n`;
+    if (host.hostScripts && host.hostScripts.length > 0) {
+      md += `**Host Scripts:**\n`;
+      for (const s of host.hostScripts) md += `- ${s}\n`;
+      md += `\n`;
+    }
     if (host.ports.length === 0) {
       md += `*No open ports found.*\n\n`;
     } else {
-      md += `| Port | State | Service | Version |\n`;
-      md += `|---|---|---|---|\n`;
+      md += `| Port | State | Service | Version | Scripts |\n`;
+      md += `|---|---|---|---|---|\n`;
       for (const port of host.ports) {
-        md += `| ${port.port} | ${port.state} | ${port.service} | ${port.version} |\n`;
+        let scriptsStr = port.scripts && port.scripts.length ? `${port.scripts.length} info` : '';
+        md += `| ${port.port} | ${port.state} | ${port.service} | ${port.version} | ${scriptsStr} |\n`;
       }
       md += `\n`;
     }
